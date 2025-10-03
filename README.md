@@ -1,23 +1,304 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📦 Bulk Import and Chunked File Upload System
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1280px-React-icon.svg.png" width="150" alt="React Logo">
 </p>
 
-## About Laravel
+A comprehensive file management solution built with Laravel (Backend) and React (Frontend), designed to handle large file uploads efficiently through chunking and background processing. This system is perfect for applications that require reliable file uploads, image processing, and data import capabilities.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## ✨ Key Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 🚀 Core Functionality
+- **Chunked File Uploads**
+  - Break large files into smaller chunks for reliable uploads
+  - Resume interrupted uploads automatically
+  - Progress tracking for better user experience
+
+- **Background Processing**
+  - Asynchronous file processing using Laravel Queues
+  - Job batching for handling multiple uploads
+  - Real-time progress updates via WebSockets (optional)
+
+- **Image Processing**
+  - Automatic generation of multiple image variants (thumbnails, optimized versions)
+  - Support for different image formats (JPEG, PNG, WebP)
+  - Watermarking and image optimization
+
+- **Bulk Data Import**
+  - CSV/Excel file import functionality
+  - Data validation and error handling
+  - Batch processing for large datasets
+
+### 🛠 Technical Features
+- **Frontend**
+  - Built with React.js and Inertia.js for a SPA-like experience
+  - Responsive design with Tailwind CSS
+  - Drag-and-drop file upload interface
+  - Real-time progress indicators
+
+- **Backend**
+  - RESTful API architecture
+  - JWT Authentication with Laravel Sanctum
+  - Database migrations and seeders
+  - Comprehensive error handling and logging
+
+- **Performance**
+  - Queue workers for background processing
+  - File storage optimization
+  - Caching strategies for better performance
+  - Database query optimization
+
+### 🔒 Security
+- File type validation
+- Virus scanning integration
+- Rate limiting for API endpoints
+- CSRF protection
+- Secure file storage with proper permissions
+
+## 🏗 System Architecture
+
+### Backend Structure
+```
+app/
+├── Console/          # Artisan commands
+├── Http/
+│   ├── Controllers/ # Request handlers
+│   ├── Middleware/  # Custom middleware
+│   └── Requests/    # Form requests
+├── Jobs/            # Background jobs
+├── Models/          # Eloquent models
+└── Services/        # Business logic
+
+config/              # Configuration files
+database/
+├── migrations/      # Database migrations
+├── seeders/         # Database seeders
+
+routes/
+├── api.php         # API routes
+├── web.php         # Web routes
+└── channels.php    # Broadcasting channels
+```
+
+### Frontend Structure
+```
+resources/
+├── js/
+│   ├── Components/  # Reusable React components
+│   ├── Layouts/     # Page layouts
+│   └── Pages/       # Page components
+├── css/             # Stylesheets
+└── views/           # Blade templates
+```
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **PHP 8.1+** with extensions: BCMath, Ctype, cURL, DOM, Fileinfo, JSON, Mbstring, OpenSSL, PDO, Tokenizer, XML
+- **Composer** (PHP package manager)
+- **Node.js 16+** & NPM (for frontend assets)
+- **MySQL 5.7+** or **MariaDB 10.3+**
+- **Redis** (recommended for queue and caching)
+
+### 🛠 Installation Guide
+
+#### 1. Clone the Repository
+```bash
+git clone https://github.com/aayat-aslam/bulk-import-chunck-upload.git
+cd bulk-import-chunck-upload
+```
+
+#### 2. Install Dependencies
+```bash
+# Install PHP dependencies
+composer install --optimize-autoloader --no-dev
+
+# Install Node.js dependencies
+npm install
+```
+
+#### 3. Environment Configuration
+```bash
+# Copy environment file
+cp .env.example .env
+
+# Generate application key
+php artisan key:generate
+```
+
+#### 4. Database Setup
+1. Create a new MySQL database
+2. Update `.env` with your database credentials:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=your_database_name
+   DB_USERNAME=your_database_user
+   DB_PASSWORD=your_database_password
+   ```
+
+3. Run migrations and seed the database:
+   ```bash
+   php artisan migrate --seed
+   ```
+
+#### 5. Storage Configuration
+```bash
+# Create storage link
+php artisan storage:link
+
+# Set proper permissions
+chmod -R 775 storage/
+chmod -R 775 bootstrap/cache/
+```
+
+#### 6. Queue Configuration (Recommended)
+Configure your `.env` to use Redis or database queues:
+```env
+QUEUE_CONNECTION=redis  # or 'database' if Redis is not available
+```
+
+Start the queue worker in a separate terminal:
+```bash
+php artisan queue:work --tries=3
+```
+
+#### 7. Start Development Servers
+In separate terminal windows:
+```bash
+# Terminal 1: Backend server
+php artisan serve
+
+# Terminal 2: Frontend assets (Vite)
+npm run dev
+
+# Terminal 3: Queue worker (if using queues)
+php artisan queue:work
+```
+
+#### 8. Access the Application
+- Web Interface: [http://localhost:8000](http://localhost:8000)
+- API Base URL: [http://localhost:8000/api](http://localhost:8000/api)
+
+Default Admin Credentials:
+- Email: admin@example.com
+- Password: password
+
+## 🔧 Environment Variables
+
+Key environment variables to configure in `.env`:
+
+```env
+APP_NAME="Bulk Import System"
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+
+QUEUE_CONNECTION=sync  # or 'database'/'redis' for production
+SESSION_DRIVER=file
+CACHE_DRIVER=file
+
+# File Upload Settings
+UPLOAD_CHUNK_SIZE=1048576  # 1MB chunks
+UPLOAD_MAX_FILE_SIZE=104857600  # 100MB max file size
+
+# Image Processing
+IMAGE_DRIVER=gd  # or 'imagick' if installed
+IMAGE_QUALITY=80
+
+# Thumbnail Sizes (width x height)
+THUMBNAIL_SIZES=256x256,512x512,1024x1024
+```
+
+## 🚀 Deployment
+
+### Production Requirements
+- PHP 8.1+ with OPcache enabled
+- Nginx/Apache web server
+- MySQL/MariaDB
+- Redis (recommended)
+- Supervisor (for queue workers)
+- SSL Certificate (Let's Encrypt)
+
+### Deployment Steps
+1. Set up your production environment variables
+2. Run `composer install --optimize-autoloader --no-dev`
+3. Run `npm run build`
+4. Set up queue workers using Supervisor
+5. Configure your web server (Nginx/Apache)
+6. Set up proper file permissions
+7. Configure SSL
+8. Set up monitoring and logging
+
+## 🛠 Configuration
+
+### Queue Workers
+For processing uploads in the background, run:
+```bash
+php artisan queue:work
+```
+
+### Storage Link
+To make uploaded files accessible from the web:
+```bash
+php artisan storage:link
+```
+
+### Environment Variables
+Key environment variables to configure:
+- `APP_ENV`: Set to `local` for development, `production` for production
+- `APP_DEBUG`: Set to `true` in development, `false` in production
+- `QUEUE_CONNECTION`: Set to `database` or `redis` for queue processing
+
+## 📚 API Documentation
+
+The API endpoints are available at `/api` and are protected by Sanctum authentication.
+
+### Authentication
+- `POST /api/register` - Register a new user
+- `POST /api/login` - Login
+- `POST /api/logout` - Logout (authenticated)
+
+### File Uploads
+- `POST /api/upload/chunk` - Upload a file chunk
+- `POST /api/upload/complete` - Complete a chunked upload
+- `GET /api/uploads` - List all uploads
+
+## 🧪 Running Tests
+
+```bash
+php artisan test
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is open-sourced under the [MIT license](LICENSE).
+
+## 👨‍💻 Author
+
+- [Aayat Aslam](https://github.com/aayat-aslam)
+
+---
+
+Built with ❤️ using Laravel and React
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
