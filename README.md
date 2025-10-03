@@ -56,6 +56,154 @@ A comprehensive file management solution built with Laravel (Backend) and React 
 - CSRF protection
 - Secure file storage with proper permissions
 
+## 🐳 Docker Setup
+
+This project includes Docker configuration for easy development and deployment. The Docker setup includes:
+
+- **PHP-FPM 8.2** for running the Laravel application
+- **Nginx** as the web server
+- **MySQL 8.0** for the database
+- **Redis** for caching and queues
+- **Node.js 18** for frontend assets
+- **MailHog** for email testing
+
+### Prerequisites
+
+- Docker and Docker Compose installed on your system
+- At least 4GB of free RAM
+- At least 2 CPU cores
+
+### Getting Started
+
+1. **Clone the repository** (if you haven't already)
+   ```bash
+   git clone https://github.com/yourusername/your-repo.git
+   cd your-repo
+   ```
+
+2. **Make the docker-commands script executable**
+   ```bash
+   chmod +x docker-commands.sh
+   ```
+
+3. **Start the application**
+   ```bash
+   ./docker-commands.sh up
+   ```
+   This will:
+   - Build and start all containers
+   - Install PHP dependencies
+   - Generate application key if needed
+   - Run database migrations and seeders
+   - Install Node.js dependencies
+   - Build frontend assets
+   - Set proper file permissions
+
+4. **Access the application**
+   - Web Interface: http://localhost:8000
+   - MailHog (Email Testing): http://localhost:8025
+   - MySQL: localhost:3306 (user: laravel, password: secret)
+   - Redis: localhost:6379
+
+### Available Commands
+
+Use the `docker-commands.sh` script to manage the application:
+
+```bash
+# Start the application
+./docker-commands.sh up
+
+# Stop all containers
+./docker-commands.sh down
+
+# View container logs
+./docker-commands.sh logs
+
+# Run Artisan commands
+./docker-commands.sh artisan migrate
+./docker-commands.sh artisan db:seed
+
+# Run Composer commands
+./docker-commands.sh composer require package/name
+
+# Run NPM commands
+./docker-commands.sh npm install
+./docker-commands.sh npm run dev
+
+# Access database console
+./docker-commands.sh db
+
+# Access Redis console
+./docker-commands.sh redis
+
+# Open bash in the app container
+./docker-commands.sh bash
+```
+
+### Environment Variables
+
+Copy `.env.docker` to `.env` and modify as needed:
+
+```bash
+cp .env.docker .env
+```
+
+Key environment variables to configure:
+
+- `APP_NAME` - Your application name
+- `APP_ENV` - Environment (local, staging, production)
+- `APP_DEBUG` - Debug mode (true/false)
+- `APP_URL` - Application URL
+- Database credentials
+- Redis configuration
+- Mail configuration
+
+### Development Workflow
+
+1. **Frontend Development**
+   - Run `./docker-commands.sh npm run dev` for development with hot-reload
+   - The frontend will be available at http://localhost:8000
+
+2. **Backend Development**
+   - The PHP code is mounted into the container, so changes are reflected immediately
+   - Access logs with `./docker-commands.sh logs`
+
+3. **Database Management**
+   - Access MySQL: `./docker-commands.sh db`
+   - Run migrations: `./docker-commands.sh artisan migrate`
+
+### Production Deployment
+
+For production, make sure to:
+
+1. Update the `.env` file with production values
+2. Set `APP_ENV=production`
+3. Set `APP_DEBUG=false`
+4. Configure proper database credentials
+5. Set up proper SSL certificates
+6. Configure proper file permissions
+
+### Troubleshooting
+
+- **Port conflicts**: Check if ports 8000, 3306, 6379 are available
+- **Container issues**: Run `docker ps -a` to check container status
+- **Logs**: Use `./docker-commands.sh logs` to view logs
+- **Rebuild**: If you make changes to Docker configuration, run `docker-compose build --no-cache`
+
+### Cleanup
+
+To stop and remove all containers, volumes, and networks:
+
+```bash
+docker-compose down -v
+```
+
+To remove all unused containers, networks, and images:
+
+```bash
+docker system prune -a
+```
+
 ## 🏗 System Architecture
 
 ### Backend Structure
